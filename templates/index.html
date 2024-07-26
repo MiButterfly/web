@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+</head>
+<body>
+    <h1>Invoice Generator</h1>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if not invoice_details %}
+        <form method="post" action="{{ url_for('index') }}">
+            <h2>Enter Invoice Details</h2>
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
+            <br>
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" required>
+            <br>
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" required>
+            <br>
+            <input type="submit" name="save_details" value="Save Details">
+        </form>
+    {% else %}
+        <h2>Invoice Details</h2>
+        <p>First Name: {{ invoice_details.first_name }}</p>
+        <p>Last Name: {{ invoice_details.last_name }}</p>
+        <p>Phone: {{ invoice_details.phone }}</p>
+
+        <h2>Add Item</h2>
+        <form method="post" action="{{ url_for('index') }}">
+            <label for="qty">Qty:</label>
+            <input type="number" id="qty" name="qty" min="1" required>
+            <br>
+            <label for="desc">Description:</label>
+            <input type="text" id="desc" name="desc" required>
+            <br>
+            <label for="price">Unit Price:</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" required>
+            <br>
+            <input type="submit" name="add_item" value="Add Item">
+        </form>
+
+        <h2>Invoice Items</h2>
+        <table>
+            <tr>
+                <th>Qty</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+            {% for item in invoice_list %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <form method="post" action="{{ url_for('index') }}">
+            <input type="submit" name="generate_invoice" value="Generate Invoice">
+            <input type="submit" name="new_invoice" value="New Invoice">
+        </form>
+    {% endif %}
+
+</body>
+</html>
